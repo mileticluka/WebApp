@@ -1,0 +1,27 @@
+﻿@model IEnumerable<AdminModule.Models.CountryViewModel>
+
+<tbody>
+    @if (Model != null)
+    {
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Code)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.Id })
+                </td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="3">No countries found.</td>
+        </tr>
+    }
+</tbody>

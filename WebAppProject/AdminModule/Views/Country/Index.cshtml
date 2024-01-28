@@ -1,0 +1,76 @@
+﻿@model IEnumerable<AdminModule.Models.CountryViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<h1>Countries Index</h1>
+
+<div id="countryListContainer">
+    @if (Model != null)
+    {
+        @Html.Partial("_CountryListPartial", Model)
+    }
+    else
+    {
+        <p>Loading Countries...</p>
+    }
+</div>
+
+<div id="paginationContainer">
+    <button id="prevBtn" class="btn btn-primary">Previous</button>
+    <button id="nextBtn" class="btn btn-primary">Next</button>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var currentPage = 1;
+
+        loadCountries(currentPage);
+
+        function loadCountries(page) {
+            $.ajax({
+                url: "/Country/GetCountries",
+                type: "GET",
+                data: { page: page },
+                success: function (result) {
+                    $("#countryListContainer").html(result);
+                    currentPage = page;
+
+                    // Fetch totalCount asynchronously
+                    $.ajax({
+                        url: "/Country/GetTotalCount",
+                        type: "GET",
+                        success: function (totalCount) {
+                            updatePaginationButtons(totalCount);
+                        },
+                        error: function () {
+                            console.error("Error loading total count.");
+                        }
+                    });
+                },
+                error: function () {
+                    console.error("Error loading countries.");
+                }
+            });
+        }
+
+        function updatePaginationButtons(totalCount) {
+            $("#prevBtn").prop("disabled", currentPage === 1);
+            $("#nextBtn").prop("disabled", currentPage >= totalCount);
+        }
+
+        $(document).on("click", "#prevBtn", function () {
+            if (currentPage > 1) {
+                loadCountries(currentPage - 1);
+            }
+        });
+
+        $(document).on("click", "#nextBtn", function () {
+            loadCountries(currentPage + 1);
+        });
+    });
+</script>

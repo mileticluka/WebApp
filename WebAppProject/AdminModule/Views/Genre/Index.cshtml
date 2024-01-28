@@ -1,0 +1,41 @@
+﻿@model IEnumerable<AdminModule.Models.GenreViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<h1>Genre Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<div id="genreListContainer">
+    @Html.Partial("_GenreListPartial", Model)
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#genreListContainer").on("click", ".delete-link", function (e) {
+                e.preventDefault();
+                var genreId = $(this).data("id");
+
+                $.ajax({
+                    url: "/Genre/Delete",
+                    type: "POST",
+                    data: { id: genreId },
+                    success: function (result) {
+                        $("#genreListContainer").html(result);
+                    },
+                    error: function () {
+                        console.error("Error deleting genre.");
+                    }
+                });
+            });
+        });
+    </script>
+}
