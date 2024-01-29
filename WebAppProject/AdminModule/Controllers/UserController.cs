@@ -1,6 +1,8 @@
 ﻿using AdminModule.Models;
 using AutoMapper;
 using DAL.Interfaces;
+using DAL.Models;
+using DAL.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,11 +21,32 @@ namespace AdminModule.Controllers
             this._mapper = mapper;
         }
 
-        public ActionResult Index()
+        [HttpGet]
+        public IActionResult Index(string searchQuery)
         {
-            var model = _mapper.Map<IList<UserViewModel>>(_userRepository.GetUsers().ToList());
+            IEnumerable<User> users;
+
+            if (string.IsNullOrEmpty(searchQuery))
+            {
+                users = _userRepository.GetUsers();
+            }
+            else
+            {
+                users = _userRepository.GetUserFiltered(searchQuery);
+            }
+
+            var userViewModels = _mapper.Map<IEnumerable<UserViewModel>>(users);
+
+            var model = new UserListViewModel
+            {
+                Users = userViewModels,
+                TotalCount = userViewModels.Count(),
+                SearchQuery = searchQuery
+            };
+
             return View(model);
         }
+
 
         // GET: UserController/Details/5
         public ActionResult Details(int id)
@@ -32,67 +55,19 @@ namespace AdminModule.Controllers
             return View(model);
         }
 
-        // GET: UserController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: UserController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
         // GET: UserController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            _userRepository.updateUserStatus(id);
+            return RedirectToAction("Index");
         }
 
-        // POST: UserController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: UserController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
 
         // POST: UserController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            _userRepository.DeleteUser(id);
+            return RedirectToAction("Index");
         }
     }
 }

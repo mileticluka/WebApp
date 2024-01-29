@@ -13,6 +13,7 @@ namespace AdminModule
             CreateMap<Tag, TagViewModel>().ReverseMap();
             CreateMap<Genre,GenreViewModel>().ReverseMap();
             CreateMap<User, UserViewModel>().ReverseMap();
+            CreateMap<Video, VideoViewModel>().ReverseMap();
         }
     }
 }

@@ -161,7 +161,7 @@ namespace API.Controllers
             }
 
             var user = _mapper.Map<User>(userDTO);
-            _userRepository.UpdateUser(user);
+            _userRepository.UpdateUser(id,user);
 
             return Ok(new { Message = $"Sucesfully updated user with Id: {id}" });
         }
@@ -185,7 +185,7 @@ namespace API.Controllers
             }
 
             user.IsConfirmed = true;
-            _userRepository.UpdateUser(user);
+            _userRepository.UpdateUser(id, user);
 
             return Ok(new { Message = "User confirmed successfully", Data = _mapper.Map<UserDTO>(user) });
         }

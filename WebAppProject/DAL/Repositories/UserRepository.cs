@@ -31,11 +31,27 @@ namespace DAL.Repositories
             _context.SaveChanges();
         }
 
-        public void UpdateUser(User user)
+        public void UpdateUser(int userId, User user)
         {
+
+            User existingUser = _context.Users.Find(userId);
+
+            if(existingUser != null)
+            {
+                existingUser.IsConfirmed = user.IsConfirmed;
+
+                _context.Entry(existingUser).State = EntityState.Modified;
+                _context.SaveChanges();
+            }
+            else
+            {
+                throw new InvalidOperationException($"USer with ID {userId} not found.");
+            }
+
             _context.Users.Update(user);
             _context.SaveChanges();
         }
+
 
         public void DeleteUser(int userId)
         {
@@ -61,6 +77,25 @@ namespace DAL.Repositories
                 user.Username.Contains(query) ||
                 user.CountryOfResidence.Name.Contains(query))
             .ToList();
+        }
+
+        public void updateUserStatus(int id)
+        {
+            User user = _context.Users.FirstOrDefault(user => user.Id == id);
+
+            if (user == null)
+            { return; }
+
+            if (user.IsConfirmed)
+            {
+                user.IsConfirmed = false;
+            }
+            else
+            {
+                user.IsConfirmed = true;
+            }
+
+            _context.SaveChanges();
         }
     }
 }
