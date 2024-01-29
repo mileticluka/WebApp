@@ -16,7 +16,9 @@ namespace AdminModule.Models
 
         public string? StreamingUrl { get; set; }
 
-        public virtual Genre Genre { get; set; } = null!;
+        public int GenreId { get; set; }
+
+        public virtual Genre? Genre { get; set; } = null!;
 
         public virtual Image? Image { get; set; }
 

@@ -55,8 +55,18 @@ namespace DAL.Repositories
 
         public void UpdateVideo(Video video)
         {
-            _context.Videos.Update(video);
-            _context.SaveChanges();
+            var existingVideo = _context.Videos
+                .Include(v => v.Genre)
+                .FirstOrDefault(v => v.Id == video.Id);
+
+            if (existingVideo != null)
+            {
+                _context.Entry(existingVideo).CurrentValues.SetValues(video);
+
+                existingVideo.Genre = video.Genre;
+
+                _context.SaveChanges();
+            }
         }
 
         public void DeleteVideo(int videoId)

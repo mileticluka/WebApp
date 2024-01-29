@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{5087E895-CD3D-4384-8894-6AC77B8C16C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminModule", "AdminModule\AdminModule.csproj", "{9F47F6EB-1204-4E0D-B90C-67A9A559B9EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminModule", "AdminModule\AdminModule.csproj", "{9F47F6EB-1204-4E0D-B90C-67A9A559B9EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
